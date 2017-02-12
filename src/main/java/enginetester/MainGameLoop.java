@@ -1,5 +1,6 @@
 package enginetester;
 
+import engine.entity.Entity;
 import engine.model.RawModel;
 import engine.model.TexturedModel;
 import engine.render.DisplayManager;
@@ -9,12 +10,13 @@ import engine.shader.ShaderProgram;
 import engine.shader.StaticShader;
 import engine.texture.ModelTexture;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 
 /**
  * @author Arthur Asatryan
  * @since 2/12/17 3:09 PM
  */
-public class MainGameLoop {
+public final class MainGameLoop {
 
     private MainGameLoop() {
     }
@@ -41,15 +43,22 @@ public class MainGameLoop {
                 3, 1, 2  // (V3, V1, V2)
         };
         final RawModel rawModel = loader.loadToVao(vertices, textureCoords, indices);
-
         final ModelTexture texture = new ModelTexture(loader.loadTexture("Flag_Armenia"));
         final TexturedModel texturedModel = new TexturedModel(rawModel, texture);
+        final Entity entity = new Entity(
+                texturedModel,
+                new Vector3f(-1, 0, 0),
+                0, 0, 0, 1
+        );
         while (!Display.isCloseRequested()) {
+            entity.translate(0.002F, 0F, 0F);
+            entity.rotate(1F, 0F, 0F);
+            entity.scale(0.002F);
             // post render
             renderer.prepare();
             shaderProgram.start();
             // render
-            renderer.render(texturedModel);
+            renderer.render(entity, shaderProgram);
             // post stop and stop
             shaderProgram.stop();
             DisplayManager.updateDisplay();

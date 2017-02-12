@@ -66,6 +66,10 @@ public abstract class ShaderProgram {
     //region Developer API
     protected abstract void bindAttributes();
 
+    protected abstract void getAllUniformLocations();
+
+    public abstract void loadTransformationMatrix(final Matrix4f matrix);
+
     protected void bindAttribute(final int attribute, final String variableName) {
         GL20.glBindAttribLocation(programId, attribute, variableName);
     }
@@ -73,8 +77,6 @@ public abstract class ShaderProgram {
     protected int getUniformLocation(final String uniformName) {
         return GL20.glGetUniformLocation(programId, uniformName);
     }
-
-    protected abstract void getAllUniformLocations();
 
     protected void loadFloat(final int location, final float value) {
         GL20.glUniform1f(location, value);

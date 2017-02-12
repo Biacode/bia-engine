@@ -35,7 +35,7 @@ public final class FileLoadUtils {
             throw new IllegalArgumentException("Can not load source for file - " + file);
         }
         final String shaderSourceString = shaderSource.toString();
-        LOGGER.debug("Loaded source - {}", shaderSourceString);
+        LOGGER.debug("Loaded source:\n{}", shaderSourceString);
         return shaderSourceString;
     }
     //endregion
