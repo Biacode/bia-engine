@@ -58,3 +58,6 @@ For solving the problem of passing the new/updated VAO data to the shader model,
 Entity has a model, position vector, rotation and scale.
 All of this constructs transformation or uniform matrix.
 There is also projection matrix which has field of view angle, near plane distance and also the far plane distance.
+
+#Camera
+The camera has position, pitch, yaw and roll. In reality the camera is not moving (the whole world moving across him).
