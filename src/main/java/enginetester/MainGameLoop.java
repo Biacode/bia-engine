@@ -43,7 +43,7 @@ public final class MainGameLoop {
                 0, 0, 0, 1
         );
 
-        // gmae loop
+        // game loop
         while (!Display.isCloseRequested()) {
             entity.translate(0.F, 0.F, -0.01F);
             entity.rotate(0.F, 0.F, 0.F);
