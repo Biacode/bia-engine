@@ -27,7 +27,7 @@ public final class FileLoadUtils {
         ) {
             String line;
             while ((line = reader.readLine()) != null) {
-                shaderSource.append(line).append("//\n");
+                shaderSource.append(line).append("\n");
             }
         } catch (final IOException ex) {
             LOGGER.error("Exception occurred - {} while loading file - {}", ex, file);
