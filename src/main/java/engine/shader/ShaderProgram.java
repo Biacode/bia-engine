@@ -1,5 +1,6 @@
 package engine.shader;
 
+import engine.entity.Camera;
 import engine.util.FileLoadUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -28,9 +29,11 @@ public abstract class ShaderProgram {
 
     private static final FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
-    protected int transformationMatrixLocation;
+    protected int viewMatrixLocation;
 
     protected int projectionMatrixLocation;
+
+    protected int transformationMatrixLocation;
     //endregion
 
     //region Public API
@@ -71,6 +74,8 @@ public abstract class ShaderProgram {
     protected abstract void bindAttributes();
 
     protected abstract void getAllUniformLocations();
+
+    public abstract void loadViewMatrix(final Camera camera);
 
     public abstract void loadProjectionMatrix(final Matrix4f matrix);
 

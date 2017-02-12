@@ -8,9 +8,10 @@ out vec2 outTextureCoords;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
 
 void main(void) {
-    gl_Position = projectionMatrix * transformationMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0);
     outTextureCoords = textureCoords;
     outColour = vec3(position.x + 0.5, 0.0, position.y + 0.5);
 }

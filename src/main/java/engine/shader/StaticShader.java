@@ -1,5 +1,7 @@
 package engine.shader;
 
+import engine.entity.Camera;
+import engine.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
 
 import static engine.util.FileLoadUtils.getResourcePath;
@@ -30,8 +32,14 @@ public class StaticShader extends ShaderProgram {
 
     @Override
     protected void getAllUniformLocations() {
+        super.viewMatrixLocation = super.getUniformLocation("viewMatrix");
         super.projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
         super.transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
+    }
+
+    @Override
+    public void loadViewMatrix(final Camera camera) {
+        super.loadMatrix(super.viewMatrixLocation, Maths.createViewMatrix(camera));
     }
 
     @Override
