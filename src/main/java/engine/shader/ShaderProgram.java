@@ -37,12 +37,10 @@ public abstract class ShaderProgram {
     }
 
     public void start() {
-        LOGGER.debug("Starting program - {}", programId);
         GL20.glUseProgram(programId);
     }
 
     public void stop() {
-        LOGGER.debug("Stopping program - {}", programId);
         GL20.glUseProgram(0);
     }
 
@@ -60,7 +58,7 @@ public abstract class ShaderProgram {
     //region Developer API
     protected abstract void bindAttributes();
 
-    protected void bindAttribute(final int attribute, final String variableName) {
+    void bindAttribute(final int attribute, final String variableName) {
         GL20.glBindAttribLocation(programId, attribute, variableName);
     }
     //endregion
@@ -71,9 +69,9 @@ public abstract class ShaderProgram {
         GL20.glShaderSource(shaderID, FileLoadUtils.loadFileSource(file));
         GL20.glCompileShader(shaderID);
         if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-            LOGGER.error("Shader info - {}", GL20.glGetShaderInfoLog(shaderID, 500));
-            LOGGER.error("Could not compile shader!");
-            System.exit(-1);
+            final String glGetShaderInfoLog = GL20.glGetShaderInfoLog(shaderID, 500);
+            LOGGER.error("Can not compile shader - {}", glGetShaderInfoLog);
+            throw new IllegalArgumentException("Can not compile shader - " + glGetShaderInfoLog);
         }
         return shaderID;
     }

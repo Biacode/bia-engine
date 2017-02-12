@@ -18,6 +18,7 @@ public final class FileLoadUtils {
     private FileLoadUtils() {
     }
 
+    //region Public API
     public static String loadFileSource(final String file) {
         LOGGER.debug("Loading file - {}", file);
         final StringBuilder shaderSource = new StringBuilder();
@@ -31,10 +32,21 @@ public final class FileLoadUtils {
             }
         } catch (final IOException ex) {
             LOGGER.error("Exception occurred - {} while loading file - {}", ex, file);
-            System.exit(-1);
+            throw new IllegalArgumentException("Can not load source for file - " + file);
         }
         final String shaderSourceString = shaderSource.toString();
         LOGGER.debug("Loaded source - {}", shaderSourceString);
         return shaderSourceString;
     }
+    //endregion
+
+    //region Utility methods
+    public static String getResourcePath(final String resourcePath) {
+        return getSystemResourcesPath() + resourcePath;
+    }
+
+    private static String getSystemResourcesPath() {
+        return ClassLoader.getSystemResource("").getPath();
+    }
+    //endregion
 }

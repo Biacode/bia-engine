@@ -1,4 +1,4 @@
-package engine.render;
+package engine.model;
 
 /**
  * @author Arthur Asatryan

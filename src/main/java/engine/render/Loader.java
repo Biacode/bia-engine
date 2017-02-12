@@ -1,15 +1,24 @@
 package engine.render;
 
+import engine.model.RawModel;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
+import static engine.util.FileLoadUtils.getResourcePath;
 
 /**
  * @author Arthur Asatryan
@@ -17,22 +26,47 @@ import java.util.List;
  */
 public class Loader {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
+
+    //region Properties
     private List<Integer> vaos = new ArrayList<>();
+
     private List<Integer> vbos = new ArrayList<>();
 
-    public RawModel loadToVao(float[] positions, int[] indices) {
+    private List<Integer> textures = new ArrayList<>();
+    //endregion
+
+    //region Public API
+    public RawModel loadToVao(final float[] positions, final float[] textureCoords, final int[] indices) {
         int vaoId = createVao();
         bindIndicesBuffer(indices);
-        storeDataInAttributeList(0, positions);
+        storeDataInAttributeList(0, 3, positions);
+        storeDataInAttributeList(1, 2, textureCoords);
         unbindVao();
         return new RawModel(vaoId, indices.length);
+    }
+
+    public int loadTexture(final String fileName) {
+        Texture texture = null;
+        try (final FileInputStream inputStream = new FileInputStream(getResourcePath("textures/" + fileName + ".png"))) {
+            texture = TextureLoader.getTexture("PNG", inputStream);
+        } catch (final IOException ex) {
+            LOGGER.error("Exception occurred - {} while loading texture file - {}", ex, fileName);
+        }
+        assertTextureNotNullForFileName(texture, fileName);
+        final int textureId = texture.getTextureID();
+        textures.add(textureId);
+        return textureId;
     }
 
     public void cleanUp() {
         vaos.forEach(GL30::glDeleteVertexArrays);
         vbos.forEach(GL15::glDeleteBuffers);
+        textures.forEach(GL11::glDeleteTextures);
     }
+    //endregion
 
+    //region Utility methods
     private int createVao() {
         int vaoId = GL30.glGenVertexArrays();
         vaos.add(vaoId);
@@ -40,13 +74,13 @@ public class Loader {
         return vaoId;
     }
 
-    private void storeDataInAttributeList(int attributeNumber, float[] data) {
+    private void storeDataInAttributeList(final int attributeNumber, final int coordinateSize, final float[] data) {
         int vboId = GL15.glGenBuffers();
         vbos.add(vboId);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
         final FloatBuffer floatBuffer = storeDataInFloatBuffer(data);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatBuffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(attributeNumber, 3, GL11.GL_FLOAT, false, 0, 0);
+        GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
@@ -54,7 +88,7 @@ public class Loader {
         GL30.glBindVertexArray(0);
     }
 
-    private void bindIndicesBuffer(int[] indices) {
+    private void bindIndicesBuffer(final int[] indices) {
         int vboId = GL15.glGenBuffers();
         vbos.add(vboId);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboId);
@@ -62,18 +96,25 @@ public class Loader {
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, intBuffer, GL15.GL_STATIC_DRAW);
     }
 
-    private IntBuffer storeDataInIntBuffer(int[] data) {
+    private IntBuffer storeDataInIntBuffer(final int[] data) {
         IntBuffer intBuffer = BufferUtils.createIntBuffer(data.length);
         intBuffer.put(data);
         intBuffer.flip();
         return intBuffer;
     }
 
-    private FloatBuffer storeDataInFloatBuffer(float[] data) {
-        FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(data.length);
-        floatBuffer.put(data);
-        floatBuffer.flip();
-        return floatBuffer;
+    private FloatBuffer storeDataInFloatBuffer(final float[] data) {
+        return (FloatBuffer) BufferUtils
+                .createFloatBuffer(data.length)
+                .put(data)
+                .flip();
     }
 
+    private void assertTextureNotNullForFileName(final Texture texture, final String fileName) {
+        if (texture == null) {
+            LOGGER.error("Can not load texture for file - {}", fileName);
+            throw new IllegalArgumentException("Can not load texture for file - " + fileName);
+        }
+    }
+    //endregion
 }

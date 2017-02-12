@@ -1,13 +1,15 @@
 package engine.shader;
 
+import static engine.util.FileLoadUtils.getResourcePath;
+
 /**
  * @author Arthur Asatryan
  * @since 2/12/17 6:07 PM
  */
 public class StaticShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = getPluginsPath() + "shaders/static/vertexShader.glsl";
-    private static final String FRAGMENT_FILE = getPluginsPath() + "shaders/static/fragmentShader.glsl";
+    private static final String VERTEX_FILE = getResourcePath("shaders/static/vertexShader.glsl");
+    private static final String FRAGMENT_FILE = getResourcePath("shaders/static/fragmentShader.glsl");
 
     public StaticShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -16,9 +18,6 @@ public class StaticShader extends ShaderProgram {
     @Override
     protected void bindAttributes() {
         super.bindAttribute(0, "position");
-    }
-
-    private static String getPluginsPath() {
-        return ClassLoader.getSystemResource("").getPath();
+        super.bindAttribute(1, "textureCoords");
     }
 }

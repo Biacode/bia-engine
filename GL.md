@@ -46,3 +46,8 @@ Tis means render 0nd vertices `(-0.5f, 0.5f, 0f)` then 1nd `(-0.5f, -0.5f, 0f)` 
 
 #Shaders
 There is a good video explaining shaders https://www.youtube.com/watch?v=V0E5WH7JRLo
+
+#Textures
+For the textures use this library http://www.slick.ninjacave.com/
+Note the texture coordinates are not same as OpenGL coordinates (the top left corner is `(0, 0)`)
+
