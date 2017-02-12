@@ -45,8 +45,8 @@ public final class MainGameLoop {
 
         // gmae loop
         while (!Display.isCloseRequested()) {
-            entity.translate(0.F, 0.F, 0.F);
-            entity.rotate(0.F, 0.F, -0.1F);
+            entity.translate(0.F, 0.F, -0.01F);
+            entity.rotate(0.F, 0.F, 0.F);
             camera.move();
             // post render
             renderer.prepare();
