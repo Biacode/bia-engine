@@ -39,14 +39,14 @@ public final class MainGameLoop {
         final TexturedModel texturedModel = new TexturedModel(rawModel, texture);
         final Entity entity = new Entity(
                 texturedModel,
-                new Vector3f(0, 0, -1),
+                new Vector3f(0, 0, -2),
                 0, 0, 0, 1
         );
 
         // game loop
         while (!Display.isCloseRequested()) {
-            entity.translate(0.F, 0.F, -0.01F);
-            entity.rotate(0.F, 0.F, 0.F);
+            entity.translate(0.F, 0.F, -0.005F);
+            entity.rotate(1, 1, 0.F);
             camera.move();
             // post render
             renderer.prepare();

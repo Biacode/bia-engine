@@ -36,8 +36,9 @@ public class Renderer {
 
     //region Public API
     public void prepare() {
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(0.33F, 0.33F, 0.33F, 1);
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
     }
 
     public void render(final Entity entity, final ShaderProgram shader) {
