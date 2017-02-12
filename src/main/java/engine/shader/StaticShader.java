@@ -13,8 +13,6 @@ public class StaticShader extends ShaderProgram {
     //region Properties
     private static final String VERTEX_FILE = getResourcePath("shaders/static/vertexShader.glsl");
     private static final String FRAGMENT_FILE = getResourcePath("shaders/static/fragmentShader.glsl");
-
-    private int transformationMatrixLocation;
     //endregion
 
     //region Constructors
@@ -32,12 +30,18 @@ public class StaticShader extends ShaderProgram {
 
     @Override
     protected void getAllUniformLocations() {
-        transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
+        super.projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
+        super.transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
+    }
+
+    @Override
+    public void loadProjectionMatrix(final Matrix4f matrix) {
+        super.loadMatrix(super.projectionMatrixLocation, matrix);
     }
 
     @Override
     public void loadTransformationMatrix(final Matrix4f matrix) {
-        super.loadMatrix(transformationMatrixLocation, matrix);
+        super.loadMatrix(super.transformationMatrixLocation, matrix);
     }
     //endregion
 }

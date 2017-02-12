@@ -55,4 +55,6 @@ Note the texture coordinates are not same as OpenGL coordinates (the top left co
 For solving the problem of passing the new/updated VAO data to the shader model, we using uniform variables
 
 #Entity
-Entity has a model, position vector, rotation and scale
+Entity has a model, position vector, rotation and scale.
+All of this constructs transformation or uniform matrix.
+There is also projection matrix which has field of view angle, near plane distance and also the far plane distance.

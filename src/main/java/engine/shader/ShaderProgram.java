@@ -27,6 +27,10 @@ public abstract class ShaderProgram {
     private final int fragShaderId;
 
     private static final FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+
+    protected int transformationMatrixLocation;
+
+    protected int projectionMatrixLocation;
     //endregion
 
     //region Public API
@@ -67,6 +71,8 @@ public abstract class ShaderProgram {
     protected abstract void bindAttributes();
 
     protected abstract void getAllUniformLocations();
+
+    public abstract void loadProjectionMatrix(final Matrix4f matrix);
 
     public abstract void loadTransformationMatrix(final Matrix4f matrix);
 

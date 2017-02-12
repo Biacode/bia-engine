@@ -24,8 +24,8 @@ public final class MainGameLoop {
     public static void main(final String[] args) {
         DisplayManager.createDisplay();
         final Loader loader = new Loader();
-        final Renderer renderer = new Renderer();
-        final ShaderProgram shaderProgram = new StaticShader();
+        final ShaderProgram shader = new StaticShader();
+        final Renderer renderer = new Renderer(shader);
         final float[] vertices = {
                 -0.5f, 0.5f, 0f,  // V0
                 -0.5f, -0.5f, 0f, // V1
@@ -47,24 +47,23 @@ public final class MainGameLoop {
         final TexturedModel texturedModel = new TexturedModel(rawModel, texture);
         final Entity entity = new Entity(
                 texturedModel,
-                new Vector3f(-1, 0, 0),
+                new Vector3f(0, 0, -1),
                 0, 0, 0, 1
         );
         while (!Display.isCloseRequested()) {
-            entity.translate(0.002F, 0F, 0F);
-            entity.rotate(1F, 0F, 0F);
-            entity.scale(0.002F);
+            entity.translate(0.F, 0.F, 0.F);
+            entity.rotate(0.F, 0.F, -0.1F);
             // post render
             renderer.prepare();
-            shaderProgram.start();
+            shader.start();
             // render
-            renderer.render(entity, shaderProgram);
+            renderer.render(entity, shader);
             // post stop and stop
-            shaderProgram.stop();
+            shader.stop();
             DisplayManager.updateDisplay();
         }
         // cleanup resources
-        shaderProgram.cleanUp();
+        shader.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
     }
