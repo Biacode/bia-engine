@@ -51,3 +51,8 @@ There is a good video explaining shaders https://www.youtube.com/watch?v=V0E5WH7
 For the textures use this library http://www.slick.ninjacave.com/
 Note the texture coordinates are not same as OpenGL coordinates (the top left corner is `(0, 0)`)
 
+#Matrices & Uniform Variables
+For solving the problem of passing the new/updated VAO data to the shader model, we using uniform variables
+
+#Entity
+Entity has a model, position vector, rotation and scale
