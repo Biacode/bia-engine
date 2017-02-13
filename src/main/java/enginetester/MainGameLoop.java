@@ -39,7 +39,7 @@ public final class MainGameLoop {
         final TexturedModel texturedModel = new TexturedModel(rawModel, texture);
         final Entity entity = new Entity(
                 texturedModel,
-                new Vector3f(0, 0, -2),
+                new Vector3f(0, 0, -4),
                 0, 0, 0, 1
         );
 
