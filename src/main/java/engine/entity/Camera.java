@@ -16,6 +16,8 @@ public class Camera {
     //region Properties
     private Vector3f position = new Vector3f(0.F, 0.F, 0.F);
 
+    private final float cameraSpeed;
+
     private float pitch;
 
     private float yaw;
@@ -24,24 +26,31 @@ public class Camera {
     //endregion
 
     //region Constructors
-    public Camera() {
+    public Camera(final float cameraSpeed) {
         LOGGER.debug("Initializing");
+        this.cameraSpeed = cameraSpeed;
     }
     //endregion
 
     //region Public API
     public void move() {
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            position.z -= 0.02f;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            position.x += 0.02f;
+            position.z -= cameraSpeed;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            position.x -= 0.02f;
+            position.x -= cameraSpeed;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            position.z += 0.02f;
+            position.z += cameraSpeed;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+            position.x += cameraSpeed;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+            position.y -= cameraSpeed;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+            position.y += cameraSpeed;
         }
     }
 
