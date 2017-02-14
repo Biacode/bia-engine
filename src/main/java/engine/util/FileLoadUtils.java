@@ -38,13 +38,13 @@ public final class FileLoadUtils {
         LOGGER.debug("Loaded source:\n{}", shaderSourceString);
         return shaderSourceString;
     }
-    //endregion
 
-    //region Utility methods
     public static String getResourcePath(final String resourcePath) {
         return getSystemResourcesPath() + resourcePath;
     }
+    //endregion
 
+    //region Utility methods
     private static String getSystemResourcesPath() {
         return ClassLoader.getSystemResource("").getPath();
     }

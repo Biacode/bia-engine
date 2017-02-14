@@ -2,6 +2,7 @@ package enginetester;
 
 import engine.entity.Camera;
 import engine.entity.Entity;
+import engine.entity.Light;
 import engine.model.RawModel;
 import engine.model.TexturedModel;
 import engine.render.DisplayManager;
@@ -32,22 +33,27 @@ public final class MainGameLoop {
         final Camera camera = new Camera(0.1F);
 
         // game objects
-        final RawModel rawModel = ObjLoader.loadObjModel("stall", loader);
-        final ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
+        final RawModel rawModel = ObjLoader.loadObjModel("dragon", loader);
+        final ModelTexture texture = new ModelTexture(loader.loadTexture("white"));
         final TexturedModel texturedModel = new TexturedModel(rawModel, texture);
         final Entity entity = new Entity(
                 texturedModel,
-                new Vector3f(0, 0, -50),
-                0, 500, 0, 1
+                new Vector3f(0, -3F, -30),
+                0, 0, 0, 1
+        );
+        final Light light = new Light(
+                new Vector3f(0, 30, 30),
+                new Vector3f(1, 1, 1)
         );
         // game loop
         while (!Display.isCloseRequested()) {
             entity.translate(0.F, 0.F, 0.F);
-            entity.rotate(0.F, 0.F, 0.F);
+            entity.rotate(0.F, 1.F, 0.F);
             camera.move();
             // post render
             renderer.prepare();
             shader.start();
+            shader.loadLight(light);
             shader.loadViewMatrix(camera);
             // render
             renderer.render(entity, shader);

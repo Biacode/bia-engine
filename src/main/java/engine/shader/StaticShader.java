@@ -1,6 +1,7 @@
 package engine.shader;
 
 import engine.entity.Camera;
+import engine.entity.Light;
 import engine.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
 
@@ -13,8 +14,8 @@ import static engine.util.FileLoadUtils.getResourcePath;
 public class StaticShader extends ShaderProgram {
 
     //region Properties
-    private static final String VERTEX_FILE = getResourcePath("shaders/static/vertexShader.glsl");
-    private static final String FRAGMENT_FILE = getResourcePath("shaders/static/fragmentShader.glsl");
+    private static final String VERTEX_FILE = getResourcePath("shaders/vertexShader.glsl");
+    private static final String FRAGMENT_FILE = getResourcePath("shaders/fragmentShader.glsl");
     //endregion
 
     //region Constructors
@@ -28,6 +29,7 @@ public class StaticShader extends ShaderProgram {
     protected void bindAttributes() {
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoords");
+        super.bindAttribute(2, "normal");
     }
 
     @Override
@@ -35,6 +37,8 @@ public class StaticShader extends ShaderProgram {
         super.viewMatrixLocation = super.getUniformLocation("viewMatrix");
         super.projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
         super.transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
+        super.lightPositionLocation = super.getUniformLocation("lightPosition");
+        super.lightColourLocation = super.getUniformLocation("lightColour");
     }
 
     @Override
@@ -50,6 +54,12 @@ public class StaticShader extends ShaderProgram {
     @Override
     public void loadTransformationMatrix(final Matrix4f matrix) {
         super.loadMatrix(super.transformationMatrixLocation, matrix);
+    }
+
+    @Override
+    public void loadLight(final Light light) {
+        super.loadVector(lightPositionLocation, light.getPosition());
+        super.loadVector(lightColourLocation, light.getColour());
     }
     //endregion
 }

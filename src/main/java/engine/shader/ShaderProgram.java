@@ -1,6 +1,7 @@
 package engine.shader;
 
 import engine.entity.Camera;
+import engine.entity.Light;
 import engine.util.FileLoadUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -34,6 +35,10 @@ public abstract class ShaderProgram {
     protected int projectionMatrixLocation;
 
     protected int transformationMatrixLocation;
+
+    protected int lightPositionLocation;
+
+    protected int lightColourLocation;
     //endregion
 
     //region Public API
@@ -80,6 +85,8 @@ public abstract class ShaderProgram {
     public abstract void loadProjectionMatrix(final Matrix4f matrix);
 
     public abstract void loadTransformationMatrix(final Matrix4f matrix);
+
+    public abstract void loadLight(final Light light);
 
     protected void bindAttribute(final int attribute, final String variableName) {
         GL20.glBindAttribLocation(programId, attribute, variableName);

@@ -37,11 +37,12 @@ public class Loader {
     //endregion
 
     //region Public API
-    public RawModel loadToVao(final float[] positions, final float[] textureCoords, final int[] indices) {
+    public RawModel loadToVao(final float[] positions, final float[] textureCoords, final float[] normals, final int[] indices) {
         int vaoId = createVao();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(0, 3, positions);
         storeDataInAttributeList(1, 2, textureCoords);
+        storeDataInAttributeList(2, 3, normals);
         unbindVao();
         return new RawModel(vaoId, indices.length);
     }
@@ -56,6 +57,10 @@ public class Loader {
         assertTextureNotNullForFileName(texture, fileName);
         final int textureId = texture.getTextureID();
         textures.add(textureId);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
         return textureId;
     }
 
