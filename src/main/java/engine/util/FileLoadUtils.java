@@ -26,10 +26,7 @@ public final class FileLoadUtils {
                 final FileReader fileReader = new FileReader(file);
                 final BufferedReader reader = new BufferedReader(fileReader)
         ) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                shaderSource.append(line).append("\n");
-            }
+            reader.lines().forEach(line -> shaderSource.append(line).append("\n"));
         } catch (final IOException ex) {
             LOGGER.error("Exception occurred - {} while loading file - {}", ex, file);
             throw new IllegalArgumentException("Can not load source for file - " + file);

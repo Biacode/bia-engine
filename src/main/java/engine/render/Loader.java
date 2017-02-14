@@ -83,8 +83,7 @@ public class Loader {
         int vboId = GL15.glGenBuffers();
         vbos.add(vboId);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
-        final FloatBuffer floatBuffer = storeDataInFloatBuffer(data);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatBuffer, GL15.GL_STATIC_DRAW);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, storeDataInFloatBuffer(data), GL15.GL_STATIC_DRAW);
         GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
@@ -97,15 +96,14 @@ public class Loader {
         int vboId = GL15.glGenBuffers();
         vbos.add(vboId);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboId);
-        final IntBuffer intBuffer = storeDataInIntBuffer(indices);
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, intBuffer, GL15.GL_STATIC_DRAW);
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, storeDataInIntBuffer(indices), GL15.GL_STATIC_DRAW);
     }
 
     private IntBuffer storeDataInIntBuffer(final int[] data) {
-        IntBuffer intBuffer = BufferUtils.createIntBuffer(data.length);
-        intBuffer.put(data);
-        intBuffer.flip();
-        return intBuffer;
+        return (IntBuffer) BufferUtils
+                .createIntBuffer(data.length)
+                .put(data)
+                .flip();
     }
 
     private FloatBuffer storeDataInFloatBuffer(final float[] data) {
