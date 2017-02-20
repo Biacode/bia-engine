@@ -30,11 +30,10 @@ public final class MainGameLoop {
         final Loader loader = new Loader();
         final Camera camera = new Camera(0.5F);
         camera.getPosition().setY(7);
-        // terrains
+        // Objects
         final List<Terrain> terrains = buildTerrains(loader);
-        // entities
         final List<Entity> entities = buildEntities(loader);
-        // per-pixel light
+        // per-pixel light (aka. Sun)
         final Light sun = new Light(
                 new Vector3f(-64, 128, 30),
                 new Vector3f(1, 1, 1)
@@ -152,7 +151,7 @@ public final class MainGameLoop {
     private static List<Entity> buildFernObjects(final Loader loader) {
         final TexturedModel texturedModel = new TexturedModel(
                 ObjLoader.loadObjModel("fern", loader),
-                new ModelTexture(loader.loadTexture("fern"))
+                new ModelTexture(loader.loadTexture("flower"))
         );
         texturedModel.getTexture().setHasTransparency(true);
         texturedModel.getTexture().setUseFakeLighting(true);
