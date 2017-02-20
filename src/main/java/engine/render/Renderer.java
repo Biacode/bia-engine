@@ -4,16 +4,18 @@ import engine.entity.Entity;
 import engine.model.RawModel;
 import engine.model.TexturedModel;
 import engine.shader.ShaderProgram;
-import engine.texture.ModelTexture;
 import engine.toolbox.Maths;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Arthur Asatryan
  * @since 2/12/17 4:09 PM
  */
-public class Renderer {
+public final class Renderer {
 
     //region Properties
     // The field of view
@@ -24,10 +26,15 @@ public class Renderer {
     private static final float FAR_PLANE = 1000.F;
 
     private Matrix4f projectionMatrix;
+
+    private ShaderProgram shader;
     //endregion
 
     //region Constructors
     public Renderer(final ShaderProgram shader) {
+        this.shader = shader;
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
         createProjectionMatrix();
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
@@ -42,31 +49,20 @@ public class Renderer {
         GL11.glClearColor(0.33F, 0.33F, 0.33F, 1);
     }
 
-    public void render(final Entity entity, final ShaderProgram shader) {
-        // unwrap arguments
-        final TexturedModel texturedModel = entity.getModel();
-        final RawModel rawModel = texturedModel.getRawModel();
-        final ModelTexture texture = texturedModel.getTexture();
-        GL30.glBindVertexArray(rawModel.getVaoId());
-        GL20.glEnableVertexAttribArray(0);
-        GL20.glEnableVertexAttribArray(1);
-        GL20.glEnableVertexAttribArray(2);
-        final Matrix4f transformationMatrix = Maths.createTransformationMatrix(
-                entity.getPosition(),
-                entity.getRotX(),
-                entity.getRotY(),
-                entity.getRotZ(),
-                entity.getScale()
-        );
-        shader.loadTransformationMatrix(transformationMatrix);
-        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturedModel.getTexture().getTextureId());
-        GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-        GL20.glDisableVertexAttribArray(0);
-        GL20.glDisableVertexAttribArray(1);
-        GL20.glDisableVertexAttribArray(2);
-        GL30.glBindVertexArray(0);
+    public void render(final Map<TexturedModel, List<Entity>> entities) {
+        entities.entrySet().forEach(entry -> {
+            prepareTexturedModel(entry.getKey());
+            entry.getValue().forEach(entity -> {
+                prepareInstance(entity);
+                GL11.glDrawElements(
+                        GL11.GL_TRIANGLES,
+                        entry.getKey().getRawModel().getVertexCount(),
+                        GL11.GL_UNSIGNED_INT,
+                        0
+                );
+            });
+            unbindTexturedModel();
+        });
     }
     //endregion
 
@@ -84,6 +80,39 @@ public class Renderer {
         projectionMatrix.m23 = -1;
         projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustumLength);
         projectionMatrix.m33 = 0;
+    }
+
+    private void prepareTexturedModel(final TexturedModel model) {
+        final RawModel rawModel = model.getRawModel();
+        GL30.glBindVertexArray(rawModel.getVaoId());
+        GL20.glEnableVertexAttribArray(0);
+        GL20.glEnableVertexAttribArray(1);
+        GL20.glEnableVertexAttribArray(2);
+
+        shader.loadShineVariables(
+                model.getTexture().getShineDamper(),
+                model.getTexture().getReflectivity()
+        );
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureId());
+    }
+
+    private void unbindTexturedModel() {
+        GL20.glDisableVertexAttribArray(0);
+        GL20.glDisableVertexAttribArray(1);
+        GL20.glDisableVertexAttribArray(2);
+        GL30.glBindVertexArray(0);
+    }
+
+    private void prepareInstance(final Entity entity) {
+        final Matrix4f transformationMatrix = Maths.createTransformationMatrix(
+                entity.getPosition(),
+                entity.getRotX(),
+                entity.getRotY(),
+                entity.getRotZ(),
+                entity.getScale()
+        );
+        shader.loadTransformationMatrix(transformationMatrix);
     }
     //endregion
 

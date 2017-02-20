@@ -16,7 +16,8 @@ void main(void) {
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitLightVector = normalize(toLightVector);
     float nDot1 = dot(unitNormal, unitLightVector);
-    float brightness = max(nDot1, 0.0);
+    // 0.2 - so there is no completely dark spots
+    float brightness = max(nDot1, 0.2);
     vec3 diffuse = brightness * lightColour;
     vec3 unitVectorToCamera = normalize(toCameraVector);
     vec3 lightDirection = -unitLightVector;
