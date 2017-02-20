@@ -1,11 +1,13 @@
 package engine.render;
 
 import engine.entity.Entity;
-import engine.model.RawModel;
 import engine.model.TexturedModel;
 import engine.shader.ShaderProgram;
 import engine.toolbox.Maths;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
 import java.util.List;
@@ -15,27 +17,15 @@ import java.util.Map;
  * @author Arthur Asatryan
  * @since 2/12/17 4:09 PM
  */
-public final class Renderer {
+public final class EntityRenderer {
 
     //region Properties
-    // The field of view
-    private static final float FOV = 70.F;
-
-    private static final float NEAR_PLANE = 0.1F;
-
-    private static final float FAR_PLANE = 1000.F;
-
-    private Matrix4f projectionMatrix;
-
     private ShaderProgram shader;
     //endregion
 
     //region Constructors
-    public Renderer(final ShaderProgram shader) {
+    public EntityRenderer(final ShaderProgram shader, final Matrix4f projectionMatrix) {
         this.shader = shader;
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glCullFace(GL11.GL_BACK);
-        createProjectionMatrix();
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
@@ -43,12 +33,6 @@ public final class Renderer {
     //endregion
 
     //region Public API
-    public void prepare() {
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(0.33F, 0.33F, 0.33F, 1);
-    }
-
     public void render(final Map<TexturedModel, List<Entity>> entities) {
         entities.entrySet().forEach(entry -> {
             prepareTexturedModel(entry.getKey());
@@ -67,28 +51,15 @@ public final class Renderer {
     //endregion
 
     //region Utility methods
-    private void createProjectionMatrix() {
-        float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        float yScale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
-        float xScale = yScale / aspectRatio;
-        float frustumLength = FAR_PLANE - NEAR_PLANE;
-
-        projectionMatrix = new Matrix4f();
-        projectionMatrix.m00 = xScale;
-        projectionMatrix.m11 = yScale;
-        projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustumLength);
-        projectionMatrix.m23 = -1;
-        projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustumLength);
-        projectionMatrix.m33 = 0;
-    }
-
     private void prepareTexturedModel(final TexturedModel model) {
-        final RawModel rawModel = model.getRawModel();
-        GL30.glBindVertexArray(rawModel.getVaoId());
+        GL30.glBindVertexArray(model.getRawModel().getVaoId());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
-
+        if (model.getTexture().isHasTransparency()) {
+            MasterRenderer.disableCulling();
+        }
+        shader.loadFakeLightingVariable(model.getTexture().isUseFakeLighting());
         shader.loadShineVariables(
                 model.getTexture().getShineDamper(),
                 model.getTexture().getReflectivity()
@@ -98,6 +69,7 @@ public final class Renderer {
     }
 
     private void unbindTexturedModel() {
+        MasterRenderer.enableCulling();
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(2);

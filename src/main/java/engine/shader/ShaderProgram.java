@@ -43,6 +43,8 @@ public abstract class ShaderProgram {
     protected int shineDamperLocation;
 
     protected int reflectivityLocation;
+
+    protected int useFakeLightingLocation;
     //endregion
 
     //region Public API
@@ -93,6 +95,8 @@ public abstract class ShaderProgram {
     public abstract void loadTransformationMatrix(final Matrix4f matrix);
 
     public abstract void loadLight(final Light light);
+
+    public abstract void loadFakeLightingVariable(final boolean useFake);
 
     protected void bindAttribute(final int attribute, final String variableName) {
         GL20.glBindAttribLocation(programId, attribute, variableName);

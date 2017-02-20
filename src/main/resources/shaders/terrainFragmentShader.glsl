@@ -26,9 +26,5 @@ void main(void) {
     specularFactor = max(specularFactor, 0.0);
     float dampedFactor = pow(specularFactor, shineDamper);
     vec3 finalSpecular = dampedFactor * reflectivity * lightColour;
-    vec4 textureColour = texture(textureSampler, outTextureCoords);
-    if (textureColour.a < 0.5) {
-        discard;
-    }
-    outColor = vec4(diffuse, 1.0) * textureColour + vec4(finalSpecular, 1.0);
+    outColor = vec4(diffuse, 1.0) * texture(textureSampler, outTextureCoords) + vec4(finalSpecular, 1.0);
 }

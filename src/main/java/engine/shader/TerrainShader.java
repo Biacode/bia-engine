@@ -9,17 +9,17 @@ import static engine.util.FileLoadUtils.getResourcePath;
 
 /**
  * @author Arthur Asatryan
- * @since 2/12/17 6:07 PM
+ * @since 2/20/17 3:13 PM
  */
-public class StaticShader extends ShaderProgram {
+public class TerrainShader extends ShaderProgram {
 
     //region Properties
-    private static final String VERTEX_FILE = getResourcePath("shaders/vertexShader.glsl");
-    private static final String FRAGMENT_FILE = getResourcePath("shaders/fragmentShader.glsl");
+    private static final String VERTEX_FILE = getResourcePath("shaders/terrainVertexShader.glsl");
+    private static final String FRAGMENT_FILE = getResourcePath("shaders/terrainFragmentShader.glsl");
     //endregion
 
     //region Constructors
-    public StaticShader() {
+    public TerrainShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
     //endregion
@@ -41,7 +41,6 @@ public class StaticShader extends ShaderProgram {
         super.lightColourLocation = super.getUniformLocation("lightColour");
         super.shineDamperLocation = super.getUniformLocation("shineDamper");
         super.reflectivityLocation = super.getUniformLocation("reflectivity");
-        super.useFakeLightingLocation = super.getUniformLocation("useFakeLighting");
     }
 
     @Override
@@ -76,4 +75,5 @@ public class StaticShader extends ShaderProgram {
         super.loadBoolean(useFakeLightingLocation, useFake);
     }
     //endregion
+
 }
