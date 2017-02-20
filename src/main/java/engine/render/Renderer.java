@@ -4,6 +4,7 @@ import engine.entity.Entity;
 import engine.model.RawModel;
 import engine.model.TexturedModel;
 import engine.shader.ShaderProgram;
+import engine.texture.ModelTexture;
 import engine.toolbox.Maths;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
@@ -42,9 +43,11 @@ public class Renderer {
     }
 
     public void render(final Entity entity, final ShaderProgram shader) {
+        // unwrap arguments
         final TexturedModel texturedModel = entity.getModel();
-        final RawModel model = texturedModel.getRawModel();
-        GL30.glBindVertexArray(model.getVaoId());
+        final RawModel rawModel = texturedModel.getRawModel();
+        final ModelTexture texture = texturedModel.getTexture();
+        GL30.glBindVertexArray(rawModel.getVaoId());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
@@ -56,9 +59,10 @@ public class Renderer {
                 entity.getScale()
         );
         shader.loadTransformationMatrix(transformationMatrix);
+        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturedModel.getTexture().getTextureId());
-        GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+        GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(2);

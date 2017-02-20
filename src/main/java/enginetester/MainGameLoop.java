@@ -36,6 +36,8 @@ public final class MainGameLoop {
         final RawModel rawModel = ObjLoader.loadObjModel("dragon", loader);
         final ModelTexture texture = new ModelTexture(loader.loadTexture("white"));
         final TexturedModel texturedModel = new TexturedModel(rawModel, texture);
+        texturedModel.getTexture().setShineDamper(10);
+        texturedModel.getTexture().setReflectivity(1);
         final Entity entity = new Entity(
                 texturedModel,
                 new Vector3f(0, -3F, -30),

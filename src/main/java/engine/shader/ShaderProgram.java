@@ -39,6 +39,10 @@ public abstract class ShaderProgram {
     protected int lightPositionLocation;
 
     protected int lightColourLocation;
+
+    protected int shineDamperLocation;
+
+    protected int reflectivityLocation;
     //endregion
 
     //region Public API
@@ -79,6 +83,8 @@ public abstract class ShaderProgram {
     protected abstract void bindAttributes();
 
     protected abstract void getAllUniformLocations();
+
+    public abstract void loadShineVariables(final float damper, final float reflectivity);
 
     public abstract void loadViewMatrix(final Camera camera);
 
