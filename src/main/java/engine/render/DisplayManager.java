@@ -33,7 +33,7 @@ public final class DisplayManager {
             Display.create(new PixelFormat(), attribs);
             Display.setTitle(WINDOW_TITLE);
         } catch (final LWJGLException ex) {
-            LOGGER.error("Exception occurred while creating display - {}", ex);
+            LOGGER.error("Exception occurred while creating display", ex);
         }
         GL11.glViewport(0, 0, WIDTH, HEIGHT);
     }

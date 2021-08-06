@@ -13,6 +13,7 @@ import engine.toolbox.ObjLoader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 /**
@@ -21,6 +22,8 @@ import java.util.*;
  */
 public final class MainGameLoop {
 
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     private MainGameLoop() {
     }
 
@@ -28,7 +31,7 @@ public final class MainGameLoop {
         DisplayManager.createDisplay();
         final MasterRenderer renderer = new MasterRenderer();
         final Loader loader = new Loader();
-        final Camera camera = new Camera(0.5F);
+        final Camera camera = new Camera(0.2F);
         camera.getPosition().setY(7);
         // Objects
         final List<Terrain> terrains = buildTerrains(loader);
@@ -45,8 +48,8 @@ public final class MainGameLoop {
             camera.move();
             final Entity entity = entities.get(0);
             entity.rotate(0.F, 1.F, 0.F);
-            terrains.forEach(renderer::processTerrain);
-            entities.forEach(renderer::processEntity);
+            terrains.forEach(renderer::addTerrain);
+            entities.forEach(renderer::addEntity);
             // render
             renderer.render(sun, camera);
             // post stop and stop
@@ -163,12 +166,11 @@ public final class MainGameLoop {
     }
 
     private static Entity buildRandomTransformedEntity(final TexturedModel texturedModel) {
-        final Random random = new Random();
-        final int i = random.nextInt(2500) + 1;
+        final int i = RANDOM.nextInt(2500) + 1;
         int next = i % 2 == 0 ? i : -i;
         return new Entity(
                 texturedModel,
-                new Vector3f(-next * random.nextFloat(), 0, -next * random.nextFloat()),
+                new Vector3f(-next * RANDOM.nextFloat(), 0, -next * RANDOM.nextFloat()),
                 0, 0, 0, 1
         );
     }

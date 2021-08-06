@@ -19,7 +19,7 @@ import java.util.List;
 public final class TerrainRenderer {
 
     //region Properties
-    private TerrainShader shader;
+    private final TerrainShader shader;
     //endregion
 
     //region Constructors

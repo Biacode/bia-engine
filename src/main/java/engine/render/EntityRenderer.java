@@ -20,7 +20,7 @@ import java.util.Map;
 public final class EntityRenderer {
 
     //region Properties
-    private ShaderProgram shader;
+    private final ShaderProgram shader;
     //endregion
 
     //region Constructors
@@ -34,13 +34,13 @@ public final class EntityRenderer {
 
     //region Public API
     public void render(final Map<TexturedModel, List<Entity>> entities) {
-        entities.entrySet().forEach(entry -> {
-            prepareTexturedModel(entry.getKey());
-            entry.getValue().forEach(entity -> {
+        entities.forEach((key, value) -> {
+            prepareTexturedModel(key);
+            value.forEach(entity -> {
                 prepareInstance(entity);
                 GL11.glDrawElements(
                         GL11.GL_TRIANGLES,
-                        entry.getKey().getRawModel().getVertexCount(),
+                        key.getRawModel().getVertexCount(),
                         GL11.GL_UNSIGNED_INT,
                         0
                 );

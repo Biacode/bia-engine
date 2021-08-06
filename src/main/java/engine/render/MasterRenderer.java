@@ -80,15 +80,15 @@ public class MasterRenderer {
         entities.clear();
     }
 
-    public void processTerrain(final Terrain terrain) {
+    public void addTerrain(final Terrain terrain) {
         terrains.add(terrain);
     }
 
-    public void processEntity(final Entity entity) {
+    public void addEntity(final Entity entity) {
         if (entities.get(entity.getModel()) != null) {
             entities.get(entity.getModel()).add(entity);
         } else {
-            entities.put(entity.getModel(), new ArrayList<>(Arrays.asList(entity)));
+            entities.put(entity.getModel(), new ArrayList<>(Collections.singletonList(entity)));
         }
     }
 

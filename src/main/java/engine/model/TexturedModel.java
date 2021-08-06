@@ -8,9 +8,9 @@ import engine.texture.ModelTexture;
  */
 public class TexturedModel {
 
-    private RawModel rawModel;
+    private final RawModel rawModel;
 
-    private ModelTexture texture;
+    private final ModelTexture texture;
 
     public TexturedModel(final RawModel rawModel, final ModelTexture texture) {
         this.rawModel = rawModel;

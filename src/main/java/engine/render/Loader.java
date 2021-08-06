@@ -29,11 +29,11 @@ public class Loader {
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
 
     //region Properties
-    private List<Integer> vaos = new ArrayList<>();
+    private final List<Integer> vaos = new ArrayList<>();
 
-    private List<Integer> vbos = new ArrayList<>();
+    private final List<Integer> vbos = new ArrayList<>();
 
-    private List<Integer> textures = new ArrayList<>();
+    private final List<Integer> textures = new ArrayList<>();
     //endregion
 
     //region Public API

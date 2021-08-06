@@ -1,0 +1,51 @@
+plugins {
+    id "java"
+    id "idea"
+    id "application"
+}
+
+ext {
+    lwjglVersion = "2.9.3"
+    slick2dVersion = "1.0.2"
+    slf4jVersion = "1.7.22"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.lwjgl.lwjgl:lwjgl:$lwjglVersion"
+    implementation "org.lwjgl.lwjgl:lwjgl_util:$lwjglVersion"
+    implementation "org.slick2d:slick2d-core:$slick2dVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "org.slf4j:slf4j-simple:$slf4jVersion"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+jar {
+    from 'resources', {
+        into 'resources'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources"
+        }
+    }
+}
+
+application {
+    mainClass = 'enginetester.MainGameLoop'
+    applicationDefaultJvmArgs = ['-Djava.library.path=/Users/artur/Projects/biacode/bia-engine/lwjgl/native/macosx']
+}
